@@ -1,8 +1,9 @@
 ---
 title: Java Programming Masterclass
 author: Purbayan Chowdhury(@shivishbrahma)
+type: draft
 created_ts: 2024-07-07 15:48:58
-modified_ts: 2024-07-08 01:22:24
+edited_ts: 2024-07-13 20:09:19
 ---
 
 ## Table of Contents
@@ -302,30 +303,76 @@ public class Aided extends  Student {
 }
 ```
 
-## Generic Class - Not completed
+## Generic Class
 
 ```java
 public class StudentClass {
-    public String getQuery(String studentData,String query){
-      String[] queryParams = query.split(",");
-      return null;
+
+    public String getQuery(String studentData, String query) {
+        String[] queryParams = query.split(",");
+        String[] studentArr = studentData.split(" ");
+        int queryType = Integer.parseInt(queryParams[0]);
+        if (queryType == 1) {
+            StudentList<String> studentList = new StudentList<>();
+            for (int i = 0; i < studentArr.length; i++) {
+                studentList.addElement(studentArr[i]);
+            }
+            return studentList.beginsWith(queryParams[1]);
+        } else if (queryType == 2) {
+            StudentList<String> studentList = new StudentList<>();
+            for (int i = 0; i < studentArr.length; i++) {
+                studentList.addElement(studentArr[i]);
+            }
+            String bloodGroups[] = queryParams[1].split(" ");
+            return studentList.bloodGroupOf(bloodGroups, queryParams[2]);
+        } else if (queryType == 3) {
+            StudentList<Integer> studentList = new StudentList<>();
+            for (int i = 0; i < studentArr.length; i++) {
+                studentList.addElement(Integer.parseInt(studentArr[i]));
+            }
+            int count = studentList.thresholdScore(Integer.parseInt(queryParams[1]));
+            return String.format("%d students scored %d above", count, Integer.parseInt(queryParams[1]));
+        } else if (queryType == 4) {
+            ScoreList<Double> scoreList = new ScoreList<>();
+            for (int i = 0; i < studentArr.length; i++) {
+                scoreList.addElement(Double.parseDouble(studentArr[i]));
+            }
+            return String.format("%.2f", scoreList.averageValues());
+        } else if (queryType == 5) {
+            ScoreList<Double> scoreList = new ScoreList<>();
+            for (int i = 0; i < studentArr.length; i++) {
+                scoreList.addElement(Double.parseDouble(studentArr[i]));
+            }
+            return String.format("%.2f", scoreList.averageValues());
+        }
+        return "Not a valid query";
     }
+
 }
 
-public class ScoreList<Type extends Number> {
+public class ScoreList<Type> {
     //Write your code
      ArrayList<Type> list = new ArrayList<>();
 
-    void addElement(Type t){
+    public void addElement(Type t){
         list.add(t);
     }
 
-    void removeElement(Type t) {
+    public void removeElement(Type t) {
         list.remove(t);
     }
 
-    Type getElement(int i) {
+    public Type getElement(int i) {
         return list.get(i);
+    }
+
+    public double averageValues() {
+        double avg = 0;
+        for(int i=0; i<list.size(); i++) {
+            avg += (Double)list.get(i);
+        }
+        avg /= list.size();
+        return Double.parseDouble(String.format("%.2f",avg));
     }
 }
 
@@ -333,42 +380,42 @@ public class StudentList<Type> {
     //Write your code
     ArrayList<Type> list = new ArrayList<>();
 
-    void addElement(Type t){
+    public void addElement(Type t){
         list.add(t);
     }
 
-    void removeElement(Type t) {
+    public void removeElement(Type t) {
         list.remove(t);
     }
 
-    Type getElement(int index) {
+    public Type getElement(int index) {
         return list.get(index);
     }
 
-    StudentList<Type> beginsWith(String prefix) {
-        StudentList<Type> res = new StudentList<>();
+    public String beginsWith(String prefix) {
+        String res = "";
         for(int i=0; i<list.size(); i++) {
-            if(String.valueOf(list.get(i)).startsWith(prefix)){
-                res.addElement(list.get(i));
+            if(String.valueOf(list.get(i)).toLowerCase().startsWith(prefix.toLowerCase())){
+                res += list.get(i).toString() + "\n";
             }
         }
         return res;
     }
 
-    StudentList<Type> bloodGroupOf(String[] bloodGroups, String bloodGroup) {
-        StudentList<Type> res = new StudentList<>();
+    public String bloodGroupOf(String[] bloodGroups, String bloodGroup) {
+        String res = "";
         for(int i=0; i<bloodGroups.length; i++) {
             if(bloodGroup.equalsIgnoreCase(bloodGroups[i])){
-                res.addElement(list.get(i));
+                res += list.get(i).toString() + "\n";
             }
         }
         return res;
     }
 
-    int thresholdScore(int score) {
-        int count;
+    public int thresholdScore(int score) {
+        int count = 0;
         for(int i=0; i<list.size(); i++) {
-            if(list.get(i) >= score) {
+            if((Integer)list.get(i) >= score) {
                 count++;
             }
         }
@@ -376,3 +423,435 @@ public class StudentList<Type> {
     }
 }
 ```
+
+## Packages
+
+```java
+public class NumberFinder {
+  public static boolean isKeith(int n) {
+    ArrayList<Integer> l = new ArrayList<>();
+
+    int temp = n;
+    while (temp > 0) {
+      l.add(temp % 10);
+      temp /= 10;
+    }
+    Collections.reverse(l);
+    int i, len, nextTerm = 0;
+    i=len = l.size();
+    while(nextTerm < n) {
+      nextTerm = 0;
+      for (int j = 1; j <= len; j++) {
+        nextTerm += l.get(i - j);
+      }
+      l.add(nextTerm);
+      i++;
+    }
+    return nextTerm == n;
+  }
+
+  public static boolean isPrime(int n) {
+    if (n <= 1) return false;
+    if (n <= 3) return true;
+    if (n % 2 == 0) return false;
+    if (n % 3 == 0) return false;
+
+    for (int i = 5; i <= Math.sqrt(n); i+=2) {
+      if (n % i == 0) return false;
+    }
+    return true;
+  }
+}
+
+public class ExtractString {
+  public static int[] extractNumericNumbers(String s){
+    ArrayList<Integer> nums = new ArrayList<>();
+    String temp = "";
+    for(int i = 0; i < s.length(); i++) {
+      if((i==0|| !Character.isAlphabetic(s.charAt(i-1))) && Character.isDigit(s.charAt(i))) {
+        temp += s.charAt(i);
+      } else {
+        if(!temp.trim().equals("") && !Character.isAlphabetic(s.charAt(i))) {
+          nums.add(Integer.parseInt(temp));
+        }
+        temp = "";
+      }
+    }
+    if (!temp.equals("")) nums.add(Integer.parseInt(temp));
+    int arr[] = nums.stream().mapToInt(Integer::intValue).toArray();
+    return arr;
+  }
+
+  public static int[] extractTextNumbers(String s){
+    String words[] = s.split(" ");
+    ArrayList<Integer> nums = new ArrayList<>();
+    for(int i = 0; i < words.length; i++) {
+        if(words[i].equalsIgnoreCase("one"))
+            nums.add(1);
+        else if(words[i].equalsIgnoreCase("two"))
+            nums.add(2);
+        else if(words[i].equalsIgnoreCase("three"))
+            nums.add(3);
+        else if(words[i].equalsIgnoreCase("four"))
+            nums.add(4);
+        else if(words[i].equalsIgnoreCase("five"))
+            nums.add(5);
+        else if(words[i].equalsIgnoreCase("six"))
+            nums.add(6);
+        else if(words[i].equalsIgnoreCase("seven"))
+            nums.add(7);
+        else if(words[i].equalsIgnoreCase("eight"))
+            nums.add(8);
+        else if(words[i].equalsIgnoreCase("nine"))
+            nums.add(9);
+        else if(words[i].equalsIgnoreCase("zero"))
+            nums.add(0);
+    }
+
+    int numsArr[] = nums.stream().mapToInt(Integer::intValue).toArray();
+    
+    return numsArr;
+  }
+}
+
+public class KeithClass {
+    public String getInput(String conversation) {
+        int[] numericNumbers = ExtractString.extractNumericNumbers(conversation);
+        int[] textNumbers = ExtractString.extractTextNumbers(conversation);
+        int sum = 0;
+        String res = "";
+        for(int i = 0; i < numericNumbers.length; i++) {
+            if(NumberFinder.isKeith(numericNumbers[i]) && !NumberFinder.isPrime(numericNumbers[i])) {
+                res+= Integer.toString(numericNumbers[i]);
+            }
+        }
+        for(int i = 0; i < textNumbers.length; i++) {
+            sum+=textNumbers[i];
+        }
+        res+= Integer.toString(sum);
+        return res;
+    }
+ 
+}
+```
+
+## Exceptions
+
+```java
+class InvalidMessageException extends Exception {
+    InvalidMessageException(String message){
+        super(message);
+    }
+}
+
+class Encrypter {
+    public static String encryptMessage(String message) throws InvalidMessageException{
+        if(!Validator.validate(message)) {
+            throw new InvalidMessageException("Try again with valid message");
+        }
+        String res = (new StringBuilder(message)).reverse().toString().toLowerCase();
+        return res;
+    }
+}
+
+class Validator {
+    public static boolean validate(String message) {
+        return message.matches("[A-Za-z0-9 ]+");
+    }
+}
+
+public class Solution {
+    private static final Scanner INPUT_READER = new Scanner(System.in);
+    
+    public static void main(String[] args) {
+        String message = INPUT_READER.nextLine();
+        
+        try {
+            String encrypted_message = Encrypter.encryptMessage(message);
+            if(! encrypted_message.startsWith("InvalidMessageException"))
+                System.out.println(encrypted_message);
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+    }
+}
+```
+
+## Collections
+
+### HashMap
+
+```java
+class Library
+{
+    
+    String bookName;
+    String author;
+    Library()
+    {
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 3;
+        hash = 83 * hash + Objects.hashCode(this.bookName);
+        hash = 83 * hash + Objects.hashCode(this.author);
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final Library other = (Library) obj;
+        if (!Objects.equals(this.bookName, other.bookName)) {
+            return false;
+        }
+        if (!Objects.equals(this.author, other.author)) {
+            return false;
+        }
+        return true;
+    }
+    
+    
+    Library(String bookName,String author)
+    {
+        this.bookName=bookName;
+        this.author=author;
+    }
+    public HashMap<Integer,Library> createLibraryMap(String booksInLibrary)
+    {
+        HashMap<Integer,Library> map = new HashMap<>();
+        String books[] = booksInLibrary.split("\\|");
+        for(String book: books) {
+            String bookParams[] = book.split(",");
+            Library lib = new Library(bookParams[1], bookParams[2]);
+            map.put(Integer.parseInt(bookParams[0]), lib);
+        }
+        return map;
+    }
+    public HashMap<Integer,Integer> createUserMap(String borrowedUsers)
+    {
+        HashMap<Integer,Integer> map = new HashMap<>();
+        String users[] = borrowedUsers.split("\\|");
+        for(String user: users) {
+            String userParams[] = user.split(",");
+            map.put(Integer.parseInt(userParams[0]), Integer.parseInt(userParams[1]));
+        }
+        return map;
+    }
+
+    
+    public String getQuery(String booksInLibrary,String borrowedUsers,String query)
+    {
+        HashMap<Integer,Library> libraryMap = createLibraryMap(booksInLibrary);
+        HashMap<Integer,Integer> userMap = createUserMap(borrowedUsers);
+        String queryParams[] = query.split(",");
+        int queryType = Integer.parseInt(queryParams[0]), userId, inCnt = 0, outCnt = 0;
+        String res = "";
+        Library lib;
+        switch(queryType) {
+            case 1: 
+            if(userMap.containsKey(Integer.parseInt(queryParams[1]))){
+                userId = userMap.get(Integer.parseInt(queryParams[1]));
+                res = String.format("No Stock\nIt is owned by %d\n", userId);
+            } else {
+                lib = libraryMap.get(Integer.parseInt(queryParams[1]));
+                res = String.format("It is available\nAuthor is %s\n", lib.author);
+            }
+            break;
+            case 2: 
+            for(int bookId: userMap.keySet()) {
+                if(userMap.get(bookId) == Integer.parseInt(queryParams[1])) {
+                    lib = libraryMap.get(bookId);
+                    res+=String.format("%d %s\n", bookId, lib.bookName);
+                }
+            }
+            break;
+            case 3: inCnt = outCnt = 0;
+            for(int bookId: libraryMap.keySet()) {
+                if(libraryMap.get(bookId).bookName.equals(queryParams[1])) {
+                    if(userMap.containsKey(bookId)) outCnt++;
+                    else inCnt++;
+                }
+            }
+            res = String.format("%d out\n%d in\n", outCnt, inCnt);
+            break;
+            case 4:
+            for(int bookId: libraryMap.keySet()) {
+                if(libraryMap.get(bookId).author.equals(queryParams[1])) {
+                    res +=libraryMap.get(bookId).bookName+"\n";
+                }
+            }
+            break;
+            case 5: 
+            for(int bookId: libraryMap.keySet()) {
+                if(libraryMap.get(bookId).bookName.toLowerCase().contains(queryParams[1].toLowerCase())) {
+                    res +=String.format("%d %s\n", bookId,libraryMap.get(bookId).bookName);
+                }
+            }
+            break;
+            default: return "Invalid Query Type";
+        }
+
+        return res;
+    }
+}
+```
+
+### TreeMap
+
+```java
+public class TreemapHandson {
+    public TreeMap<Integer, String> createPlayerPositionMap(String cricketDataset) {
+        TreeMap<Integer, String> map = new TreeMap<>();
+        String players[] = cricketDataset.split("\\|");
+        for (String player : players) {
+            String playerParams[] = player.split(",");
+            map.put(Integer.parseInt(playerParams[0]), playerParams[1]);
+        }
+        return map;
+    }
+
+    public TreeMap<String, Integer> createPlayerScoreMap(String cricketDataset) {
+        TreeMap<String, Integer> map = new TreeMap<>();
+        String players[] = cricketDataset.split("\\|");
+        for (String player : players) {
+            String playerParams[] = player.split(",");
+            map.put(playerParams[1], Integer.parseInt(playerParams[2]));
+        }
+        return map;
+    }
+
+    public TreeMap<String, double[]> createMatchesMap(String cricketDataset) {
+        String matches[] = cricketDataset.split("\\n");
+        TreeMap<String, double[]> map = new TreeMap<>();
+        for (String match : matches) {
+            for (String player : match.split("\\|")) {
+                String playerParams[] = player.split(",");
+                if (playerParams[0].equals("1") || playerParams[0].equals("2")) {
+                    if (map.containsKey(playerParams[1])) {
+                        double[] arr = map.get(playerParams[1]);
+                        arr[0] += 1;
+                        arr[1] += Integer.parseInt(playerParams[2]);
+                        map.put(playerParams[1], arr);
+                    } else {
+                        map.put(playerParams[1], new double[]{1, Integer.parseInt(playerParams[2])});
+                    }
+                }
+            }
+        }
+        return map;
+    }
+
+    public String getQuery(String cricketDataset, String query) {
+        String queryParams[] = query.split(" ");
+        TreeMap<Integer, String> playerPositionMap;
+        TreeMap<String, Integer> playerScoreMap;
+        TreeMap<String, double[]> matchesMap;
+        String res = "", maxPlayer = "";
+        double maxScore = 0;
+        switch (queryParams[0]) {
+            case "1":
+                playerPositionMap = createPlayerPositionMap(cricketDataset);
+                for (int playerPosition : playerPositionMap.keySet()) {
+                    if (playerPosition >= Integer.parseInt(queryParams[1]) && playerPosition <= Integer.parseInt(queryParams[2])) {
+                        res += String.format("%d %s\n", playerPosition, playerPositionMap.get(playerPosition));
+                    }
+                }
+                break;
+            case "2":
+                playerPositionMap = createPlayerPositionMap(cricketDataset);
+                playerScoreMap = createPlayerScoreMap(cricketDataset);
+                for (int playerPosition : playerPositionMap.keySet()) {
+                    if (playerScoreMap.get(playerPositionMap.get(playerPosition)) > Integer.parseInt(queryParams[1])) {
+                        res += String.format("%d %s\n", playerPosition, playerPositionMap.get(playerPosition));
+                    }
+                }
+                break;
+            case "3":
+                matchesMap = createMatchesMap(cricketDataset);
+                for (String playerName : matchesMap.keySet()) {
+                    double[] params = matchesMap.get(playerName);
+                    if ((params[1] / params[0]) > maxScore) {
+                        maxPlayer = playerName;
+                        maxScore = (params[1] / params[0]);
+                    }
+                }
+                res = String.format("The Efficient Opener is %s", maxPlayer);
+                break;
+            default:
+                return "Invalid Query Type";
+        }
+        return res;
+    }
+}
+```
+
+### ArrayList
+
+```java
+
+```
+
+### HashSet
+
+```java
+```
+
+## Functional Programming
+
+## Multithreading
+
+## Regular Expression
+
+```java
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+public class RegEx {
+
+    public String findCardTypeNumbers(String conversation, String cardType) {
+        // Write your code here
+        StringBuilder res = new StringBuilder();
+        Pattern pattern;
+        Matcher matcher;
+
+        switch (cardType) {
+            case "Visa":
+                pattern = Pattern.compile("\\b4(\\d{15}|\\d{12})\\b");
+                break;
+
+            case "American Express":
+                pattern = Pattern.compile("\\b(34|37)\\d{13}\\b");
+                break;
+
+            case "Discover":
+                pattern = Pattern.compile("\\b(65\\d{14})|(6011\\d{12})\\b");
+                break;
+
+            case "JCB":
+                pattern = Pattern.compile("\\b((2131|1800)\\d{11})|(35\\d{14})\\b");
+                break;
+            default:
+                return "Not a valid card type";
+        }
+
+        matcher = pattern.matcher(conversation);
+        while (matcher.find()) {
+            res.append(matcher.group() + " ");
+        }
+
+        return res.toString().trim();
+    }
+}
+```
+
+## Database Connectivity
