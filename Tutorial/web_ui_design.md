@@ -2,7 +2,7 @@
 title: Web User Interface Design Techniques
 author: Purbayan Chowdhury(@shivishbrahma)
 created_ts: 2024-06-29 20:56:32
-modified_ts: 2024-07-07 15:47:04
+edited_ts: 2024-07-07 15:47:04
 tags: ["UI design", web]
 ---
 

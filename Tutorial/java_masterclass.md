@@ -8,24 +8,25 @@ edited_ts: 2024-07-13 20:09:19
 
 ## Table of Contents
 
-- Control Flow Statements
-- Object Oriented Programming
-  - Classes and Objects
-  - Polymorphism
-  - Inheritance
-- Abstract Class
-- Package
-- Exception
-- Collections
-  - HashSet
-  - ArrayList
-  - HashMap
-  - TreeMap
-- Generics
-- Functional Programming
-- Multithreading
-- Regular Expression
-- Database Connectivity
+- [Table of Contents](#table-of-contents)
+- [Conditional Statements](#conditional-statements)
+- [Object Oriented Programming](#object-oriented-programming)
+    - [Classes and Objects](#classes-and-objects)
+    - [Polymorphism](#polymorphism)
+    - [Multiple Inheritance](#multiple-inheritance)
+- [Abstract Class](#abstract-class)
+- [Generic Class](#generic-class)
+- [Packages](#packages)
+- [Exceptions](#exceptions)
+- [Collections](#collections)
+    - [HashMap](#hashmap)
+    - [TreeMap](#treemap)
+    - [ArrayList](#arraylist)
+    - [HashSet](#hashset)
+- [Functional Programming : Lambda, Streams](#functional-programming--lambda-streams)
+- [Multithreading](#multithreading)
+- [Regular Expression](#regular-expression)
+- [Database Connectivity](#database-connectivity)
 
 ## Conditional Statements
 
@@ -537,6 +538,8 @@ public class KeithClass {
 
 ## Exceptions
 
+`Solution.java`
+
 ```java
 class InvalidMessageException extends Exception {
     InvalidMessageException(String message){
@@ -798,19 +801,337 @@ public class TreemapHandson {
 ### ArrayList
 
 ```java
+import java.util.List;
+import java.util.ArrayList;
 
+class Passanger {
+    int id;
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public float getFare() {
+        return fare;
+    }
+
+    public void setFare(float fare) {
+        this.fare = fare;
+    }
+
+    float fare;
+
+    public Passanger(int id, float fare) {
+        this.id = id;
+        this.fare = fare;
+    }
+
+    public static float calculateFare(int capacity, int currentCapacity) {
+        if (currentCapacity <= Math.ceil(capacity / 4.0)) {
+            return capacity * 1.6f;
+        }
+        if (currentCapacity <= Math.ceil(capacity / 2.0)) {
+            return capacity * 1.3f;
+        }
+        return capacity;
+    }
+}
+
+public class BusProb {
+
+    public String output(int capacity, int stops, List<String> listOfInputStrings, String query) {
+        String[] queryParams = query.split(", ");
+        int queryType = Integer.parseInt(queryParams[0]);
+        List<Integer> busQueue = new ArrayList<>();
+        List<Passanger> passengerList = new ArrayList<>();
+        int onCnt = 0, offCnt = 0, cnt = 0, i;
+        float fare;
+        float[] fares = { 0, 0, 0 };
+        int[] farePass = { 0, 0, 0 };
+
+        for (i = 0; i < stops; i++) {
+            onCnt = offCnt = 0;
+            for (String p : listOfInputStrings.get(i).split(" ")) {
+                if (p.startsWith("+")) {
+                    onCnt++;
+                }
+                if (p.startsWith("-")) {
+                    offCnt++;
+                }
+            }
+            cnt += onCnt - offCnt;
+
+            for (String p : listOfInputStrings.get(i).split(" ")) {
+                if (p.startsWith("+")) {
+                    busQueue.add(Integer.parseInt(p.substring(1)));
+                    passengerList.add(new Passanger(Integer.parseInt(p.substring(1)), Passanger.calculateFare(capacity, cnt)));
+                } 
+                if(p.startsWith("-")) {
+                    busQueue.removeIf(p1 -> p1 == Integer.parseInt(p.substring(1)));
+                }
+            }
+        }
+
+        switch (queryType) {
+            case 1:
+                onCnt = offCnt = 0;
+                for (i = 0; i < stops; i++) {
+                    for (String p : listOfInputStrings.get(i).split(" ")) {
+                        if (p.startsWith("+")) {
+                            onCnt++;
+                        } else {
+                            offCnt++;
+                        }
+                    }
+                }
+                return String.format("%d passengers got on the bus and %d passengers got out of the bus", onCnt,
+                        offCnt);
+
+            case 2:
+                fares[0] = capacity * 1.6f;
+                fares[1] = capacity * 1.3f;
+                fares[2] = capacity;
+                farePass[0] = (int) passengerList.stream().filter(p -> p.getFare() == fares[0]).count();
+                farePass[1] = (int) passengerList.stream().filter(p -> p.getFare() == fares[1]).count();
+                farePass[2] = (int) passengerList.stream().filter(p -> p.getFare() == fares[2]).count();
+
+                return String.format(
+                        "%d passengers traveled with a fare of %.1f, %d passengers traveled with a fare of %.1f and %d passengers traveled with a fare of %.1f",
+                        farePass[0], fares[0], farePass[1], fares[1], farePass[2], fares[2]);
+
+            case 3:
+                fare = passengerList.stream()
+                        .filter(p -> p.getId() == Integer.parseInt(queryParams[1]))
+                        .map(p -> p.getFare())
+                        .reduce(0.0f, Float::sum);
+                return String.format("Passenger %s spent a total fare of %.1f", queryParams[1], fare);
+
+            case 4:
+                cnt = (int) passengerList.stream().filter(p -> p.getId() == Integer.parseInt(queryParams[1])).count();
+                return String.format("Passenger %s has got on the bus for %d times",
+                        queryParams[1], cnt);
+
+            case 5:
+                // Check if passenger exists
+                if (busQueue.removeIf(p1 -> p1 == Integer.parseInt(queryParams[1]))) {
+                    return String.format("Passenger %s was inside the bus at the end of the trip",
+                            queryParams[1]);
+                }
+                return String.format("Passenger %s was not inside the bus at the end of the trip",
+                        queryParams[1]);
+            default:
+                return "Invalid Query Type";
+        }
+    }
+}
 ```
 
 ### HashSet
 
+`Hashset.java`
+
 ```java
+import java.util.HashSet;
+
+public class Hashset {
+
+    public static String getOut(int numberOfMatches, String squads, int squad1, int squad2) {
+        // write your code here
+        String res = "";
+        String[] matchSet = squads.split("#");
+        String[] players;
+        HashSet<String> intersectionSet = new HashSet<String>(),
+                unionSet = new HashSet<String>(),
+                inMatchSet = new HashSet<String>(),
+                notInMatchSet = new HashSet<String>();
+
+        for (int i = 0; i < matchSet.length; i++) {
+            players = matchSet[i].split(" ");
+            HashSet<String> curSet = new HashSet<String>();
+            for (String playerName : players) {
+                curSet.add(playerName);
+            }
+            if (i == 0) {
+                intersectionSet.addAll(curSet);
+            } else {
+                intersectionSet.retainAll(curSet);
+            }
+            unionSet.addAll(curSet);
+            if (i == squad1 - 1) {
+                notInMatchSet.addAll(curSet);
+            }
+            if (i == squad2 - 1) {
+                inMatchSet.addAll(curSet);
+            }
+        }
+        unionSet.removeAll(notInMatchSet);
+        inMatchSet.retainAll(unionSet);
+        res = String.format("%s, %s", String.join(" ", intersectionSet), String.join(" ", inMatchSet));
+        return res;
+    }
+}
 ```
 
-## Functional Programming
+## Functional Programming : Lambda, Streams
+
+`LambdaFn.java`
+
+```java
+import java.util.*;
+import java.util.stream.Collectors;
+
+public class LambdaFn {
+
+    public boolean isNarcissisticNumber(String s) {
+        long r = 0;
+        for (int i = 0; i < s.length(); i++) {
+            long l = Long.parseLong(s.charAt(i) + "");
+            r += Math.pow(l, s.length());
+        }
+        return r == Long.parseLong(s);
+    }
+
+    public List<Long> functionalProgramming(List<String> listOfIntegers) {
+        //Write your code here
+        List<Long> outputList = Collections.emptyList();
+        outputList = listOfIntegers.stream()
+                .filter(s -> isNarcissisticNumber(s))
+                .map(s -> Long.valueOf(s))
+                .collect(Collectors.toList());
+        return outputList;
+    }
+}
+```
 
 ## Multithreading
 
+`Solution.java`
+
+```java
+class Task1 extends Thread {
+    public static int beg, a;
+
+    public void run() {
+        try {
+            for (int i = beg; i < a + beg; i++) {
+                synchronized (Solution.i) {
+                    int index = Integer.parseInt(Solution.i);
+                    Solution.threadArray[index++] = i;
+                    Solution.i = Integer.toString(index);
+                    System.err.printf("1: %d\n",index);
+                    Thread.sleep(3);
+                }
+            }
+        } catch (Exception e) {
+            Thread.currentThread().interrupt();
+        }
+    }
+}
+
+class Task2 extends Thread {
+    public static int beg, a;
+
+    public void run() {
+        try {
+            for (int i = beg; i < a + beg; i++) {
+                synchronized (Solution.i) {
+                    Thread.sleep(6);
+                    int index = Integer.parseInt(Solution.i);
+                    Solution.threadArray[index++] = i;
+                    Solution.i = Integer.toString(index);
+                    System.err.printf("2: %d\n",index);
+                }
+            }
+        } catch (Exception e) {
+            Thread.currentThread().interrupt();
+        }
+    }
+}
+
+class Task3 extends Thread {
+    public static int beg, a;
+
+    public void run() {
+
+        try {
+            for (int i = beg; i < a + beg; i++) {
+                synchronized (Solution.threadArray) {
+                int index = Integer.parseInt(Solution.i);
+                Solution.threadArray[index++] = i;
+                Solution.i = Integer.toString(index);
+                }
+            }
+        } catch (Exception e) {
+            Thread.currentThread().interrupt();
+        }
+    }
+}
+public class Solution {
+    public static final int[] threadArray = new int[300];
+    public static volatile String i = 0 + "";
+
+    public boolean test() throws InterruptedException {
+        Task1 task1 = new Task1();
+        Task2 task2 = new Task2();
+        Task3 task3 = new Task3();
+        Thread task2Thread = new Thread(task2);
+        Thread task3Thread = new Thread(task3);
+        task1.start();
+        task2Thread.start();
+        task1.join();
+        task2Thread.join();
+        task3Thread.start();
+        int first = Task1.a + Task2.a;
+        int containsSecondThread = Task1.a;
+        String oneAndTwo = "";
+        String sizeOfTask1 = "";
+        for (int i = 0; i < first; i++) {
+            oneAndTwo += threadArray[i] + " ";
+        }
+        for (int i = 0; i < containsSecondThread; i++) {
+            sizeOfTask1 += threadArray[i] + " ";
+        }
+        int begOfTask3 = Task3.beg;
+        String checkingString = "";
+        for (int i = begOfTask3; i < threadArray.length; i++) {
+            checkingString += i + " ";
+        }
+        String task3String = "";
+        for (int j = begOfTask3; j < threadArray.length; j++) {
+            task3String += threadArray[j] + " ";
+        }
+        if ((!oneAndTwo.contains(begOfTask3 + "") && sizeOfTask1.contains(Task2.beg + ""))
+                && task3String.equals(checkingString)) {
+            return true;
+        }
+        return false;
+    }
+
+    public static void main(String[] args) throws InterruptedException {
+        Scanner sc = new Scanner(System.in);
+        Solution solution = new Solution();
+        int one = sc.nextInt();
+        Task1.a = one;
+        Task1.beg = 0;
+        int two = sc.nextInt();
+        Task2.a = two;
+        Task2.beg = one;
+        int three = sc.nextInt();
+        Task3.a = three;
+        Task3.beg = one + two;
+        System.out.print(solution.test());
+        sc.close();
+    }
+}
+```
+
 ## Regular Expression
+
+`RegEx.java`
 
 ```java
 import java.util.regex.Matcher;
@@ -855,3 +1176,211 @@ public class RegEx {
 ```
 
 ## Database Connectivity
+
+`RunningScripts.java`
+
+```java
+import java.io.FileInputStream;
+import java.io.InputStreamReader;
+import java.sql.Connection;
+import org.apache.ibatis.jdbc.ScriptRunner;
+
+public class RunningScripts {
+
+    public void runDbScript() throws Exception {
+        Connection conn = DbUtil.getConnection();
+        ScriptRunner runner = new ScriptRunner(conn);
+        InputStreamReader reader = new InputStreamReader(new FileInputStream("db.sql"));
+        runner.runScript(reader);
+        reader.close();
+        DbUtil.closeConnection(conn);
+    }
+}
+```
+
+`DBUtil.java`
+
+```java
+import java.sql.*;
+
+public class DbUtil {
+	private static String DB_URL = "jdbc:mysql://localhost:3306/grocery";
+	private static String USERNAME = "user1";
+	private static String PASSWORD = "MySQL123$";
+
+	public static Connection getConnection() {
+		Connection con = null;
+		try {
+			Class.forName("com.mysql.jdbc.Driver");
+			con = DriverManager.getConnection(DB_URL, USERNAME, PASSWORD);
+		} catch (Exception e) {
+			System.out.println(e);
+		}
+		return con;
+	}
+
+	public static void closeConnection(Connection con) {
+		try {
+			con.close();
+		} catch (Exception e) {
+
+		}
+	}
+}
+```
+
+`DbOperations.java`
+
+```java
+import DbUtil;
+import java.sql.Connection;
+import java.sql.Date;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+
+public class DbOperations {
+
+    public boolean insertCategory(String type) throws SQLException {
+        try {
+            Connection conn = DbUtil.getConnection();
+            PreparedStatement stmt = conn.prepareStatement("INSERT INTO category(type) values (?)");
+            stmt.setString(1, type);
+            stmt.executeUpdate();
+            return true;
+        } catch (Exception e) {
+        }
+        return false;
+    }
+
+    public ArrayList getCategoryById(int id) throws SQLException {
+        ArrayList res = new ArrayList();
+        try {
+            Connection conn = DbUtil.getConnection();
+            PreparedStatement stmt = conn.prepareStatement("SELECT id, type FROM category where id = ?");
+            stmt.setInt(1, id);
+            ResultSet rs = stmt.executeQuery();
+            while (rs.next()) {
+                res.add(rs.getInt("id"));
+                res.add(rs.getString("type"));
+            }
+            return res;
+        } catch (Exception e) {
+        }
+        return null;
+    }
+
+    public ResultSet getAllCategory() throws SQLException {
+        try {
+            Connection conn = DbUtil.getConnection();
+            PreparedStatement stmt = conn.prepareStatement("SELECT id, type FROM category");
+            ResultSet rs = stmt.executeQuery();
+            return rs;
+        } catch (Exception e) {
+        }
+        return null;
+    }
+
+    public boolean insertProduct(String name, float price, String type) throws SQLException {
+        try {
+            Connection conn = DbUtil.getConnection();
+            PreparedStatement stmt1 = conn.prepareStatement("SELECT id FROM category where type = ?");
+            stmt1.setString(1, type);
+            ResultSet rs = stmt1.executeQuery();
+
+            int categoryId = -1;
+            while (rs.next()) {
+                categoryId = rs.getInt("id");
+            }
+            PreparedStatement stmt = conn.prepareStatement("INSERT INTO product(name, price, category_id) values (?,?,?)");
+            stmt.setString(1, name);
+            stmt.setFloat(2, price);
+            stmt.setInt(3, categoryId);
+            stmt.executeUpdate();
+            return true;
+        } catch (Exception e) {
+        }
+        return false;
+    }
+
+    public ArrayList getProductById(int id) throws SQLException {
+        ArrayList res = new ArrayList();
+        try {
+            Connection conn = DbUtil.getConnection();
+            PreparedStatement stmt = conn.prepareStatement("select id, name, price, category_id from product where id = ?");
+            stmt.setInt(1, id);
+            ResultSet rs = stmt.executeQuery();
+            while (rs.next()) {
+                res.add(rs.getInt("id"));
+                res.add(rs.getString("name"));
+                res.add(rs.getFloat("price"));
+                res.add(rs.getInt("category_id"));
+            }
+            return res;
+        } catch (Exception e) {
+        }
+        return null;
+    }
+
+    public ResultSet getAllProduct() throws SQLException {
+        try {
+            Connection conn = DbUtil.getConnection();
+            PreparedStatement stmt = conn.prepareStatement("select id, name, price, category_id from product");
+            ResultSet rs = stmt.executeQuery();
+            return rs;
+        } catch (Exception e) {
+        }
+        return null;
+    }
+
+    public boolean insertOrder(String product_name, Date date) throws SQLException {
+        try {
+            Connection conn = DbUtil.getConnection();
+            PreparedStatement stmt1 = conn.prepareStatement("SELECT id FROM product where name = ?");
+            stmt1.setString(1, product_name);
+            ResultSet rs = stmt1.executeQuery();
+            int productId = -1;
+            while (rs.next()) {
+                productId = rs.getInt("id");
+            }
+            PreparedStatement stmt = conn.prepareStatement("INSERT INTO product(product_id, order_date) values (?,?)");
+            stmt.setInt(1, productId);
+            stmt.setDate(2, date);
+            stmt.executeUpdate();
+            return true;
+        } catch (Exception e) {
+        }
+        return false;
+    }
+
+    public ArrayList getOrderById(int id) throws SQLException {
+        ArrayList res = new ArrayList();
+        try {
+            Connection conn = DbUtil.getConnection();
+            PreparedStatement stmt = conn.prepareStatement("SELECT id, product_id, order_date FROM orders where id = ?");
+            stmt.setInt(1, id);
+            ResultSet rs = stmt.executeQuery();
+            while (rs.next()) {
+                res.add(rs.getInt("id"));
+                res.add(rs.getInt("product_id"));
+                res.add(rs.getDate("order_date"));
+            }
+            return res;
+        } catch (Exception e) {
+        }
+        return null;
+    }
+
+    public ResultSet getAllOrder() throws SQLException {
+        try {
+            Connection conn = DbUtil.getConnection();
+            PreparedStatement stmt = conn.prepareStatement("select id, product_id, order_date from orders");
+            ResultSet rs = stmt.executeQuery();
+            return rs;
+        } catch (Exception e) {
+        }
+        return null;
+    }
+}
+```
