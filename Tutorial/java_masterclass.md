@@ -6,12 +6,9 @@ created_ts: 2024-07-07 15:48:58
 edited_ts: 2024-07-13 20:09:19
 ---
 
-## Table of Contents
-
-- [Table of Contents](#table-of-contents)
 - [Conditional Statements](#conditional-statements)
 - [Object Oriented Programming](#object-oriented-programming)
-    - [Classes and Objects](#classes-and-objects)
+    - [Classes and Objects - Singleton Pattern](#classes-and-objects---singleton-pattern)
     - [Polymorphism](#polymorphism)
     - [Multiple Inheritance](#multiple-inheritance)
 - [Abstract Class](#abstract-class)
@@ -56,9 +53,7 @@ public static String[] calculateGrade(int[][] students_marks) {
 
 ## Object Oriented Programming
 
-### Classes and Objects
-
-<!-- ### Singleton Pattern -->
+### Classes and Objects - Singleton Pattern
 
 ```java
 class Register {
