@@ -6,6 +6,32 @@ edited_ts: 2024-07-07 15:47:04
 tags: ["UI design", web]
 ---
 
+- [Basic UI Elements](#basic-ui-elements)
+    - [Menu](#menu)
+    - [Accordion](#accordion)
+    - [Navigation Bar](#navigation-bar)
+    - [Dropdown](#dropdown)
+    - [Modal](#modal)
+    - [Tooltip](#tooltip)
+    - [Input Autocomplete](#input-autocomplete)
+- [Handling Images](#handling-images)
+    - [Mouse Hover](#mouse-hover)
+    - [Magnification of Image on Mouse-Hover](#magnification-of-image-on-mouse-hover)
+    - [Lightbox](#lightbox)
+    - [Image Carousel](#image-carousel)
+    - [Lazy Loading Images](#lazy-loading-images)
+- [Designing Layouts](#designing-layouts)
+    - [Grids in a Web Page](#grids-in-a-web-page)
+    - [Using Grid to Make a Mosaic Layout](#using-grid-to-make-a-mosaic-layout)
+    - [Using Flex to Divide Web Pages into Sections](#using-flex-to-divide-web-pages-into-sections)
+    - [Responsive Sectors within a Web Page](#responsive-sectors-within-a-web-page)
+    - [Grid or Flex](#grid-or-flex)
+- [Animations](#animations)
+    - [Animated Menu Buttons](#animated-menu-buttons)
+    - [Animated Repeating Background](#animated-repeating-background)
+    - [Floating Elements and Shadow Effect](#floating-elements-and-shadow-effect)
+    - [Using JavaScript to Trigger Animations](#using-javascript-to-trigger-animations)
+
 ## Basic UI Elements
 
 ### Menu
@@ -179,7 +205,7 @@ Divide web pages into sections using Flexbox.
 
 ### Grid or Flex
 
-## Creating Animations
+## Animations
 
 Simple Animations can be created using HTML5 and CSS3 only. JavaScript can be used to trigger animations manually.
 
@@ -190,3 +216,11 @@ What if a Menu button gradually changed its color on mouse-hover giving it a gra
 ### Animated Repeating Background
 
 Animated Background gives a feeling that the background image of the web page is in never-ending motion.
+
+### Floating Elements and Shadow Effect
+
+Insert Floating Elements into a web page that casts shadows.
+
+### Using JavaScript to Trigger Animations
+
+<https://codepen.io/dcode-software/pen/KKQvbvj>
