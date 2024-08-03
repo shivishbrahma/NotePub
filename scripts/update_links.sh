@@ -11,7 +11,7 @@ for dir in . */; do
 
     # Check if dir has .md
     if [ $(ls -1 *.md | grep -v "^index.md$" | wc -l) -gt 0 ]; then
-        ls -1 *.md | grep -v "^index.md$" | { read name; name=${name/.md/};echo "- [$name](/$dir$name)"; } >index.md
+        ls -1 *.md | grep -v "^index.md$" | { read name; name=${name/.md/};echo "- [$name]($website$dir$name)"; } >index.md
     fi
     sed -i -e 's/^/# Links\n\n/' index.md
 
