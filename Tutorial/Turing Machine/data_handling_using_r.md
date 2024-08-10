@@ -7,6 +7,31 @@ tags: [r, "data handling", dplyr, "datatable", "dataframe"]
 course_id: 55199
 ---
 
+- [Built in DataSets in R](#built-in-datasets-in-r)
+    - [Assignment - Data Frames](#assignment---data-frames)
+- [Installing packages](#installing-packages)
+- [Data Tables](#data-tables)
+    - [Assignment - Data Tables](#assignment---data-tables)
+- [Using lapply and sapply](#using-lapply-and-sapply)
+    - [Assignment - Loop Functions](#assignment---loop-functions)
+- [Data Import](#data-import)
+    - [CSV](#csv)
+    - [txt](#txt)
+    - [Copy xlsx and use below command](#copy-xlsx-and-use-below-command)
+    - [ODBC](#odbc)
+- [Web Scrapping](#web-scrapping)
+- [dplyr](#dplyr)
+    - [Intro to dplyr](#intro-to-dplyr)
+    - [Data structure - tbl](#data-structure---tbl)
+    - [Assignment - Intro to dplyr](#assignment---intro-to-dplyr)
+    - [Assignment - dplyr Verbs and Functions](#assignment---dplyr-verbs-and-functions)
+    - [Pipe Operator Use](#pipe-operator-use)
+- [Join](#join)
+    - [Assignment - Set Operations](#assignment---set-operations)
+    - [Assignment - Creating Contingency Tables](#assignment---creating-contingency-tables)
+    - [Practice Exercise 1](#practice-exercise-1)
+
+
 ```r
 name <- c("A", "P", "F", "J", "C")
 age <- c(28, 30, 21, 39, 35)
@@ -444,11 +469,10 @@ arrange(sflights, desc(avgspd))
 
 ## Join
 
-### df1 - left
-
-### df2 - right
-
 ```r
+# df1 - left
+
+# df2 - right
 df1 %>% inner_join(df2, by = "customer_id")
 
 df1 %>% left_join(df2, by = "customer_id")
