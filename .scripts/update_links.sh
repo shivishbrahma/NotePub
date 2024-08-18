@@ -40,7 +40,6 @@ create_index() {
     if [ "$dir" == "$ROOT_DIR" ]; then
         index_file="README.md"
         sed '/## Links/,$d' -i "$index_file"
-        echo "" >>"$index_file"
     else
         rm -f "$index_file"
     fi
@@ -68,6 +67,7 @@ create_index() {
             if [ -z "$title" ] || [ ! -f "$index_file" ]; then
                 continue
             fi
+            item=${item/.md/}
             printf "* [%s](%s)\n" "$title" "$website${item#./}" >>"$index_file"
         fi
     done
