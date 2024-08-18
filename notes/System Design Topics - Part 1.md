@@ -1,4 +1,10 @@
-# System Design Topics
+---
+title: System Design Topics - Part 1
+author: Purbayan Chowdhury(@shivishbrahma)
+created_ts: 2024-06-29 20:56:32
+edited_ts: 2024-07-07 15:47:04
+tags: ["System Design", "Reverse Proxy", "API Gateway", "Load Balancer"]
+---
 
 ## Reverse Proxy vs API Gateway vs Load Balancer
 
